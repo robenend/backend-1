@@ -1,0 +1,119 @@
+actions:
+  - name: forgotPassword
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/forgotPassword
+      forward_client_headers: true
+      timeout: 15
+      request_transform:
+        body:
+          action: transform
+          template: "{\n  \n  \"email\": {{$body.input.arg1.email}}\n  \n}"
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: anmu
+      - role: user
+      - role: anonymous
+  - name: login
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/login
+      forward_client_headers: true
+      timeout: 10
+      request_transform:
+        body:
+          action: transform
+          template: "{\n  \"email\" :{{$body.input.arg1.email}},\n  \"password\" :{{$body.input.arg1.password}}\n  \n}"
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: user
+      - role: anonymous
+  - name: resetPassword
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/resetPassword
+      timeout: 10
+    permissions:
+      - role: anmu
+      - role: user
+      - role: anonymous
+  - name: sendMessage
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/sendMessage
+      timeout: 10
+      request_transform:
+        body:
+          action: transform
+          template: "{\n  \n    \"email\": {{$body.input.arg1.email}},\n    \"message\": {{$body.input.arg1.message}},\n     \"subject\": {{$body.input.arg1.subject}}\n  \n}"
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: user
+      - role: anonymous
+  - name: signup
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/signup
+      timeout: 10
+      request_transform:
+        body:
+          action: transform
+          template: "{\n    \"firstName\": {{$body.input.arg1.firstName}},\n    \"lastName\": {{$body.input.arg1.lastName}},\n    \"email\": {{$body.input.arg1.email}},\n    \"password\": {{$body.input.arg1.password}}\n  \n}"
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: anonymous
+  - name: updateUser
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/updateUser
+      timeout: 12
+      request_transform:
+        body:
+          action: transform
+          template: "{\n  \n    \"firstName\": {{$body.input.arg1.firstName}},\n    \"lastName\": {{$body.input.arg1.lastName}},\n    \"email\": {{$body.input.arg1.email}},\n    \"newPassword\": {{$body.input.arg1.newPassword}},\n    \"password\": {{$body.input.arg1.password}}\n  \n}"
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: user
+  - name: uploadImages
+    definition:
+      kind: synchronous
+      handler: http://localhost:7000/uploadImage
+      timeout: 15
+      request_transform:
+        method: POST
+        query_params: {}
+        template_engine: Kriti
+        version: 2
+    permissions:
+      - role: user
+custom_types:
+  enums: []
+  input_objects:
+    - name: loginInput
+    - name: signupInput
+    - name: imagesData
+    - name: updateInput
+    - name: forgotInput
+    - name: resetInput
+    - name: requestInput
+    - name: SampleInput
+    - name: messageInput
+  objects:
+    - name: authResponse
+    - name: imagesUrls
+    - name: SampleOutput
+    - name: forgotOutput
+    - name: requestOutput
+    - name: messageOutput
+  scalars: []
