@@ -1,5 +1,6 @@
 package controller
 
+// message controller
 import (
 	"fmt"
 	"gilab.com/progrmaticreviwes/golang-gin-poc/utilService"
