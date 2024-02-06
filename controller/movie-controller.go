@@ -52,3 +52,42 @@ func ChangeStatus( ctx *gin.Context){
 	ctx.JSON(200, mutation.UpdateUsers.Returning)
 
 }
+
+func CreateStatus(ctx *gin.Context) {
+	// Get status data from request body
+	var inputData struct {
+		New struct {
+			Title string `json:"title"`
+			// Add other fields as required
+		} `json:"new"`
+	}
+
+	if err := ctx.ShouldBindJSON(&inputData); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Define the GraphQL mutation string
+	var mutation struct {
+		CreateStatus struct {
+			Returning []struct {
+				ID    string `json:"id"`
+				Title string `json:"title"`
+				// Add other fields as required
+			} `json:"returning"`
+		} `graphql:"create_status(object: $newStatus)"`
+	}
+
+	variables := map[string]interface{}{
+		"newStatus": inputData.New,
+	}
+
+	// Execute the request
+	err := utilService.Client().Mutate(context.Background(), &mutation, variables)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, mutation.CreateStatus.Returning)
+}
